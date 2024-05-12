@@ -1,4 +1,4 @@
-package ocr;
+package com.example.SmartPillBE.ocr;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -19,7 +19,7 @@ public class OCRAPIDemo {
     public static void main(String[] args) {
         String apiURL = "https://7jsiorbx1j.apigw.ntruss.com/custom/v1/30311/04ab83d4215870a0d025063f80730961413c0f2e4844704d1e88853624aa4397/general";
         String secretKey = "dEd5ZkZScmd2a01XZVB1d3FTR0dKa250cGhUT3dQRE8=";
-        String imageFile = "C:\\CapstoneProject\\SmatPill-BE\\src\\main\\java\\ocr\\봉투.jpg";
+        String imageFile = "com/example/SmartPillBE/asd.jpg";
 
         try {
             URL url = new URL(apiURL);
