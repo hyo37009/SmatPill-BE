@@ -1,24 +1,28 @@
 package com.example.SmartPillBE.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.example.SmartPillBE.domain.doaseRegimen.DosageRegimen;
+import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
+@Table(name = "pill")
 public class Pill {
-
     @Id
-    @Column(name = "pill_id")
-    private Long id;
+    @Column(name = "pill_number", unique = true, nullable = false)
+    private String pillNumber;
 
-    private String nameKR;
-    private String nameEN;
-    private String company;
-    private String category; // 추후 Enum 형식으로 변환
-    private String imageLink;
+    private String pillName;
+
+    private String dosageForm;
+
+    private String effect;
+
+    private String medicationInfo;
+
+    @Embedded
+    private DosageRegimen dosageRegimen; // 용법용량
+
+    private String category;
 
 }
