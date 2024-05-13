@@ -5,7 +5,7 @@ import java.util.List;
 public class FindPill {
 
     String FindPill(){
-        OCRGeneralAPIDemo ocrGeneralAPI = new OCRGeneralAPIDemo();
+        OCRGeneralAPI ocrGeneralAPI = new OCRGeneralAPI();
         List<String> ocrResult = ocrGeneralAPI.getOCRResult("이미지 주소");
         for (String string : ocrResult) {
             if (string in 데이터베이스)
