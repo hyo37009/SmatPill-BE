@@ -1,20 +1,19 @@
 package com.example.SmartPillBE.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-
-import java.time.LocalDateTime;
 
 @Entity
-@Getter
 public class SideEffect {
-
     @Id
-    @OneToOne
-    @JoinColumn(name = "pill", unique = true)
-    private Pill pill;
+    @GeneratedValue
+    @Column(name = "sideEffect_id")
+    private Long id;
 
-    private LocalDateTime writeDate;
-    private LocalDateTime sideEffectDate;
-    private String memo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "profile_id")
+    private Profile profile;
+
+    @Column
+    private String contents;
+
 }

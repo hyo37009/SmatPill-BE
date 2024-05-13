@@ -1,6 +1,6 @@
 package com.example.SmartPillBE.domain.doaseTime;
 
-public enum time_1 {
+public enum medPeriod {
     /*
     MORNING 아침
     LUNCH 점심

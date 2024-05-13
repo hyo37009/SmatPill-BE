@@ -1,4 +1,4 @@
-package com.example.SmartPillBE.entity;
+package com.example.SmartPillBE.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
