@@ -1,4 +1,4 @@
-package ocr;
+package com.example.SmartPillBE.ocr;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
