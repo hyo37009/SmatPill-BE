@@ -1,0 +1,31 @@
+#spring:
+#  datasource:
+#    url: jdbc:h2:~/smartpill
+#    username: sa
+#    password:
+#    driver-class-name: org.h2.Driver
+
+spring:
+  datasource:
+    url: jdbc:mariadb://smartpill-db.c5em068o2zsc.ap-northeast-2.rds.amazonaws.com:3306/smartpill
+    username: admin
+    password: wWPCzC2G9CAEvctrUqE6
+#    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+#        show_sql: true
+        format_sql: true
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+#    org.hibernate.type: trace
