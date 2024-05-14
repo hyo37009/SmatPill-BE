@@ -5,6 +5,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class ProfileRepository {
     @PersistenceContext
@@ -22,5 +24,20 @@ public class ProfileRepository {
 
     public Profile findOne(int id){
         return em.find(Profile.class, id);
+    }
+
+    public List<Profile> findAll() {
+        return em.createQuery("select p from Profile p", Profile.class)
+                .getResultList();
+    }
+
+    public int countAll() {
+        return em.createQuery("select p from Profile p", Profile.class)
+                .getResultList()
+                .size();
+    }
+
+    public boolean isEmpty(){
+        return findAll().isEmpty();
     }
 }

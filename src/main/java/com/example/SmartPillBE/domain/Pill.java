@@ -18,11 +18,7 @@ public class Pill {
 
     private String effect;
 
-    private String medicationInfo;
-
-    @Embedded
-    private DosageRegimen dosageRegimen; // 용법용량
-
     private String category;
 
+    private String imagePath;
 }
