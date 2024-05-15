@@ -21,4 +21,6 @@ public class Pill {
     private String category;
 
     private String imagePath;
+
+
 }
