@@ -2,6 +2,7 @@ package com.example.SmartPillBE;
 
 import com.example.SmartPillBE.domain.Pill;
 import com.example.SmartPillBE.domain.Profile;
+import com.example.SmartPillBE.ocr.OCRGeneralAPI;
 import com.example.SmartPillBE.repository.PillRepository;
 import com.example.SmartPillBE.service.ProfileService;
 import jakarta.persistence.EntityManager;
@@ -39,7 +40,7 @@ public class dbTest {
 //
 //    }
 
-    @Test
+    /*@Test
     public void 약이름으로조회() throws Exception {
         // given
         List<String> texts; // 글자들만 남도록 가공한 String 리스트
@@ -56,7 +57,16 @@ public class dbTest {
 
         // then
 
-    }
+    }*/
+
+    @Test
+
+
+
+
+
+
+
 
 
     @AfterEach
