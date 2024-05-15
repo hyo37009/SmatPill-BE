@@ -5,7 +5,6 @@ import com.example.SmartPillBE.domain.Pill;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,7 +17,7 @@ public class PillRepository {
 //        em.persist(pill);
 //    }
 
-    public Pill findOne(String pillNumber) {
+    public Pill findByNumber(String pillNumber) {
         return em.find(Pill.class, pillNumber);
     }
 
