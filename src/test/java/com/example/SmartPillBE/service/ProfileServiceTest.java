@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.stereotype.Service;
+import org.springframework.test.annotation.Rollback;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,6 +34,18 @@ class ProfileServiceTest {
 //        // then
 //        assertThat(profile1.isRepresentative()).isTrue();
 //        assertThat(profile2.isRepresentative()).isFalse();
+//
+//    }
+
+//    @Test
+//    public void 프로필생성() throws Exception {
+//        // given
+//        int profileId = profileService.newProfile("이름", "2022-01-01", 12.2f, 54.2f, "여", "테스트");
+//
+//        // when
+//        Profile profile = profileService.getProfile(profileId);
+//        // then
+//        System.out.println("profile = " + profile.toString());
 //
 //    }
 
