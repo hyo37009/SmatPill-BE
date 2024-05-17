@@ -17,6 +17,8 @@ public class OCRGeneralAPI {
     public List<String> getOCRResult(String imagePath) {
         List<String> result = new ArrayList<>();
         try {
+
+
             URL url = new URL(apiURL);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setUseCaches(false);
