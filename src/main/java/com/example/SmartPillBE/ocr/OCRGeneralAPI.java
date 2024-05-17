@@ -3,6 +3,7 @@ package com.example.SmartPillBE.ocr;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -13,6 +14,12 @@ import org.json.JSONObject;
 public class OCRGeneralAPI {
     String apiURL = "https://7jsiorbx1j.apigw.ntruss.com/custom/v1/30311/04ab83d4215870a0d025063f80730961413c0f2e4844704d1e88853624aa4397/general";
     String secretKey = "dEd5ZkZScmd2a01XZVB1d3FTR0dKa250cGhUT3dQRE8=";
+
+    public static void main(String[] args) {
+        OCRGeneralAPI ocrGeneralAPI = new OCRGeneralAPI();
+        List<String> ocrResult = ocrGeneralAPI.getOCRResult("C:\\Users\\user\\Documents\\github\\SmatPill-BE\\src\\main\\java\\com\\example\\SmartPillBE\\ocr\\asd.jpg");
+        System.out.println("ocrResult = " + ocrResult);
+    }
 
     public List<String> getOCRResult(String imagePath) {
         List<String> result = new ArrayList<>();

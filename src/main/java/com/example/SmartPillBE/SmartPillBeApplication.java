@@ -14,8 +14,4 @@ public class SmartPillBeApplication {
 		SpringApplication.run(SmartPillBeApplication.class, args);
 	}
 
-	private void init(){
-
-	}
-
 }
