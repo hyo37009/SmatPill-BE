@@ -8,8 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @Transactional(readOnly = true)
 @SpringBootTest
 class PillRepositoryTest {
@@ -36,7 +34,7 @@ class PillRepositoryTest {
         // given
         String pillNumber = "200402588";
         // when
-        Pill pill = pillRepository.findOne(pillNumber);
+        Pill pill = pillRepository.findByNumber(pillNumber);
 
         // then
         System.out.println("pill = " + pill.getPillName());
