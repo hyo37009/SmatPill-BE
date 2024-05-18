@@ -17,7 +17,7 @@ public class ProfileRepository {
     }
 
     public Profile findProfileByName(String name){
-        return em.createQuery("select p from Profile p where p.name :name", Profile.class)
+        return em.createQuery("select p from Profile p where p.name = :name", Profile.class)
                 .setParameter("name", name)
                 .getSingleResult();
     }
@@ -40,4 +40,5 @@ public class ProfileRepository {
     public boolean isEmpty(){
         return findAll().isEmpty();
     }
+
 }
