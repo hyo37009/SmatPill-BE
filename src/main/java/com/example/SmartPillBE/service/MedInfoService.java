@@ -32,7 +32,7 @@ public class MedInfoService {
                               int howLong, String startDate,
                               List<String> timeArr, String time) throws Exception {
         Profile profile = profileRepository.findOne(profileId);
-        Pill pill = pillRepository.findOne(pillNumber);
+        Pill pill = pillRepository.findByNumber(pillNumber);
         LocalDate stDate = LocalDate.parse(startDate, DateTimeFormatter.ISO_DATE);
         time += ":00"; // 포맷팅 단순화를 위해 뒤에 초를 임의로 붙여줌
         LocalTime eatTime = LocalTime.parse(time);
