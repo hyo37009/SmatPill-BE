@@ -4,6 +4,8 @@ import com.example.SmartPillBE.domain.doaseRegimen.DosageRegimen;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.util.Objects;
+
 @Entity
 @Getter
 @Table(name = "pill")
@@ -22,5 +24,8 @@ public class Pill {
 
     private String imagePath;
 
-
+    @Override
+    public String toString() {
+        return this.pillName;
+    }
 }
