@@ -1,31 +1,23 @@
 package com.example.SmartPillBE.ocr;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+public class InferTextExtractor {
 
-public class OCRGeneralAPI {
     String apiURL = "https://7jsiorbx1j.apigw.ntruss.com/custom/v1/30311/04ab83d4215870a0d025063f80730961413c0f2e4844704d1e88853624aa4397/general";
     String secretKey = "dEd5ZkZScmd2a01XZVB1d3FTR0dKa250cGhUT3dQRE8=";
 
-    public static void main(String[] args) {
-        OCRGeneralAPI ocrGeneralAPI = new OCRGeneralAPI();
-        List<String> ocrResult = ocrGeneralAPI.getOCRResult("C:\\Users\\user\\Documents\\github\\SmatPill-BE\\src\\main\\java\\com\\example\\SmartPillBE\\ocr\\asd.jpg");
-        System.out.println("ocrResult = " + ocrResult);
-    }
-
-    public List<String> getOCRResult(String imagePath) {
-        List<String> result = new ArrayList<>();
+    public List<String> extractInferText(String imagePath) {
+        List<String> inferTexts = new ArrayList<>();
         try {
-
-
             URL url = new URL(apiURL);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setUseCaches(false);
@@ -41,7 +33,8 @@ public class OCRGeneralAPI {
             json.put("timestamp", System.currentTimeMillis());
             JSONObject image = new JSONObject();
             image.put("format", "jpg");
-//            image should be public, otherwise, should use data
+
+            // 이미지 파일을 바이트 배열로 변환하여 전송
             File file = new File(imagePath);
             FileInputStream inputStream = new FileInputStream(file);
             byte[] buffer = new byte[inputStream.available()];
@@ -54,33 +47,37 @@ public class OCRGeneralAPI {
             json.put("images", images);
             String postParams = json.toString();
 
+            // HTTP 요청 전송
             DataOutputStream wr = new DataOutputStream(con.getOutputStream());
             wr.writeBytes(postParams);
             wr.flush();
             wr.close();
 
+            // HTTP 응답 처리
             int responseCode = con.getResponseCode();
             BufferedReader br;
             if (responseCode == 200) {
                 br = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
+                String inputLine;
+                StringBuilder response = new StringBuilder();
+                while ((inputLine = br.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                br.close();
+
+                // JSON 파싱하여 inferText 값만 추출
+                JSONObject jsonResponse = new JSONObject(response.toString());
+                JSONArray fields = jsonResponse.getJSONArray("images").getJSONObject(0).getJSONArray("fields");
+                for (int i = 0; i < fields.length(); i++) {
+                    JSONObject field = fields.getJSONObject(i);
+                    inferTexts.add(field.getString("inferText"));
+                }
             } else {
-                br = new BufferedReader(new InputStreamReader(con.getErrorStream(), "UTF-8"));
+                System.out.println("HTTP error: " + responseCode);
             }
-            String inputLine;
-            StringBuffer response = new StringBuffer();
-            while ((inputLine = br.readLine()) != null) {
-                response.append(inputLine);
-                result.add(inputLine);
-            }
-            br.close();
-
-            System.out.println(response);
-            return result;
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println("Error: " + e.getMessage());
         }
-        return null;
-
-
+        return inferTexts;
     }
 }
