@@ -57,7 +57,7 @@ public class InferTextExtractor {
             int responseCode = con.getResponseCode();
             BufferedReader br;
             if (responseCode == 200) {
-                br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                br = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
                 String inputLine;
                 StringBuilder response = new StringBuilder();
                 while ((inputLine = br.readLine()) != null) {
