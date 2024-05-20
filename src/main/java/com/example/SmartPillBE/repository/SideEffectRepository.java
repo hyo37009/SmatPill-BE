@@ -30,7 +30,7 @@ public class SideEffectRepository {
     }
 
     public List<SideEffect> findByPill(Pill pill){
-        // TODO ??? ?? ???? ???
+        // TODO
         return em.createQuery("select s from SideEffect s where s.pill = :pill", SideEffect.class)
                 .setParameter("pill", pill)
                 .getResultList();
