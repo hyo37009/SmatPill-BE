@@ -35,7 +35,7 @@ public class InferTextExtractor {
             JSONObject image = new JSONObject();
             image.put("format", "jpg");
 
-            // ÀÌ¹ÌÁö ÆÄÀÏÀ» ¹ÙÀÌÆ® ¹è¿­·Î º¯È¯ÇÏ¿© Àü¼Û
+            // ì´ë¯¸ì§€ íŒŒì¼ì„ ë°”ì´íŠ¸ ë°°ì—´ë¡œ ë³€í™˜í•˜ì—¬ ì „ì†¡
             File file = new File(imagePath);
             FileInputStream inputStream = new FileInputStream(file);
             byte[] buffer = new byte[inputStream.available()];
@@ -48,13 +48,13 @@ public class InferTextExtractor {
             json.put("images", images);
             String postParams = json.toString();
 
-            // HTTP ¿äÃ» Àü¼Û
+            // HTTP ìš”ì²­ ì „ì†¡
             DataOutputStream wr = new DataOutputStream(con.getOutputStream());
             wr.writeBytes(postParams);
             wr.flush();
             wr.close();
 
-            // HTTP ÀÀ´ä Ã³¸®
+            // HTTP ì‘ë‹µ ì²˜ë¦¬
             int responseCode = con.getResponseCode();
             BufferedReader br;
             if (responseCode == 200) {
@@ -66,7 +66,7 @@ public class InferTextExtractor {
                 }
                 br.close();
 
-                // JSON ÆÄ½ÌÇÏ¿© inferText °ª¸¸ ÃßÃâ
+                // JSON íŒŒì‹±í•˜ì—¬ inferText ê°’ë§Œ ì¶”ì¶œ
                 JSONObject jsonResponse = new JSONObject(response.toString());
                 JSONArray fields = jsonResponse.getJSONArray("images").getJSONObject(0).getJSONArray("fields");
                 for (int i = 0; i < fields.length(); i++) {
