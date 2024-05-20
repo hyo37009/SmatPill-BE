@@ -2,7 +2,7 @@ package com.example.SmartPillBE.api;
 
 import com.example.SmartPillBE.domain.Profile;
 import com.example.SmartPillBE.service.ProfileService;
-import jakarta.validation.Valid;
+import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -43,8 +43,7 @@ public class ProfileApiController {
     }
 
     @PutMapping("/api/profiles")
-    public CreateProfileResponse saveProfile(@RequestBody CreateProfileRequest request) {
-        System.out.println("request.toString() = " + request.toString());
+    public ProfileResponse saveProfile(@RequestBody CreateProfileRequest request) {
         int newProfileId = profileService.newProfile(
                 request.name,
                 request.birth,
@@ -52,7 +51,21 @@ public class ProfileApiController {
                 request.weight,
                 request.sex,
                 request.nickname);
-        return new CreateProfileResponse(newProfileId, "정상적으로 생성되었습니다.");
+        return new ProfileResponse(newProfileId, "정상적으로 생성되었습니다.");
+    }
+
+    @PostMapping("/api/profiles/{id}")
+    public ProfileResponse updateProfile(@PathVariable("id") int id, @RequestBody UpdateProfileRequest request){
+        Profile profile = profileService.getProfile(id);
+        profileService.updateProfile(id, request.name, request.height, request.weight, request.nickname);
+
+        return new ProfileResponse(profile.getId(), "정상적으로 수정되었습니다.");
+    }
+
+    @DeleteMapping("/api/profiles/{id}")
+    public ProfileResponse deleteProfile(@PathVariable("id") int id){
+        profileService.deleteProfile(id);
+        return new ProfileResponse(id, "정상적으로 삭제되었습니다.");
     }
 
     @Data
@@ -72,20 +85,11 @@ public class ProfileApiController {
         private String sex;
         private String nickname;
         private boolean isRepresentative;
-//
-//        public ProfileDto(String name, String birth, double height, double weight, String sex, String nickname) {
-//            this.name = name;
-//            this.birth = birth;
-//            this.height = height;
-//            this.weight = weight;
-//            this.sex = sex;
-//            this.nickname = nickname;
-//        }
     }
 
     @Data
     @AllArgsConstructor
-    static class CreateProfileResponse {
+    static class ProfileResponse {
         private int id;
         private String message;
     }
@@ -100,5 +104,14 @@ public class ProfileApiController {
         private String nickname;
         
         
+    }
+
+    @Data
+    @Nullable
+    static class UpdateProfileRequest {
+        private String name;
+        private float height;
+        private float weight;
+        private String nickname;
     }
 }

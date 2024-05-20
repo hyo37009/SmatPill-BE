@@ -2,6 +2,7 @@ package com.example.SmartPillBE.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -20,18 +21,23 @@ public class Profile {
     @Column(name = "profile_id", unique = true)
     private int id;
 
+    @Setter
     private String name;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birth;
 
+    @Setter
     private float height;
+    @Setter
     private float weight;
 
     @Enumerated(EnumType.STRING)
     private Gender sex;
 
+    @Setter
     private String nickname;
+
     private boolean isRepresentative = false;
 
     private int age;

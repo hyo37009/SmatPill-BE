@@ -32,6 +32,29 @@ public class ProfileService {
         return profile.getId();
     }
 
+    @Transactional
+    public int updateProfile(Integer id, String name, Float height, Float weight, String nickname){
+
+        Profile profile = profileRepository.findOne(id);
+        if(height != null){
+            profile.setHeight(height);
+        }
+
+        if(weight != null){
+            profile.setWeight(weight);
+        }
+
+        if(name != null){
+            profile.setName(name);
+        }
+
+        if(nickname != null){
+            profile.setName(nickname);
+        }
+
+        return profile.getId();
+    }
+
     /**
      * 프로필 조회
      */
@@ -43,4 +66,10 @@ public class ProfileService {
         return profileRepository.findAll();
     }
 
+    @Transactional
+    public boolean deleteProfile(int id) {
+        Profile profile = profileRepository.findOne(id);
+        profileRepository.delete(profile);
+        return true;
+    }
 }

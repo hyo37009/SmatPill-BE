@@ -41,4 +41,8 @@ public class ProfileRepository {
         return findAll().isEmpty();
     }
 
+    public void delete(Profile profile){
+        em.remove(profile);
+    }
+
 }
