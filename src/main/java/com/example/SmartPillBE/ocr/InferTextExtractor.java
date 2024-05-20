@@ -1,3 +1,4 @@
+
 package com.example.SmartPillBE.ocr;
 
 import org.json.JSONArray;
@@ -81,3 +82,5 @@ public class InferTextExtractor {
         return inferTexts;
     }
 }
+
+

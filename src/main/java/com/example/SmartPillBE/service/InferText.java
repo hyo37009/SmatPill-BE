@@ -1,7 +1,6 @@
 package com.example.SmartPillBE.service;
 
 import com.example.SmartPillBE.ocr.InferTextExtractor;
-import com.example.SmartPillBE.repository.PillRepository;
 
 import java.util.List;
 
