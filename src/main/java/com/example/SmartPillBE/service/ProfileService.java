@@ -22,7 +22,7 @@ public class ProfileService {
     public int newProfile(String name, String birth, float height, float weight, String sex, String nickname){
         System.out.println("birth = " + birth);
         LocalDate birthDate = LocalDate.parse(birth, DateTimeFormatter.ISO_LOCAL_DATE);
-        Gender gender = (sex == "여")?Gender.FEMALE:Gender.MALE;
+        Gender gender = (sex.equals("여"))?Gender.FEMALE:Gender.MALE;
 
         Profile profile = Profile.createProfile(name, birthDate, height, weight, gender, nickname);
         if (profileRepository.isEmpty()) {
