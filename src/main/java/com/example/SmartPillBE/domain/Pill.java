@@ -30,4 +30,5 @@ public class Pill {
     private String colorBack; // 색깔 (뒤)
     private String lineFront; // 분할선 (앞)
     private String lineBack; // 분할선 (뒤)
+
 }

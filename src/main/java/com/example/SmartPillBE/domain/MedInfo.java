@@ -3,6 +3,7 @@ package com.example.SmartPillBE.domain;
 import com.example.SmartPillBE.domain.doaseTime.DosageTime;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -35,9 +36,12 @@ public class MedInfo {
 
     private LocalTime eatTime; // 복용 시간
 
-    private boolean setAlarm = false;
+    private boolean alarmSet;
 
     private LocalTime alarmTime;
+
+    @Setter
+    private boolean status; // 복용여부
 
 
     // 연관관계 메서드 //
@@ -54,6 +58,10 @@ public class MedInfo {
         medInfo.dosageTime = dosageTime;
         medInfo.eatTime = eatTime;
 
+        medInfo.status = false;
+        medInfo.alarmSet = false;
+        medInfo.alarmTime = null;
+
         return medInfo;
     }
 
@@ -64,16 +72,14 @@ public class MedInfo {
     /**
      * 알람 설정
      */
-    public void setSetAlarm(LocalTime alarmTime) {
-        if(setAlarm){
-            throw new IllegalStateException("알람이 이미 설정되어있습니다.");
-        }
-
-        this.setAlarm = true;
+    public void setAlarm(LocalTime alarmTime) {
+        this.alarmSet = true;
         this.alarmTime = alarmTime;
     }
 
     public void cancelAlarm(){
-        this.setAlarm = false;
+        this.alarmSet = false;
+        this.alarmTime = null;
     }
+
 }

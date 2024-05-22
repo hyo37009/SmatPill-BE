@@ -43,7 +43,7 @@ public class ProfileApiController {
     }
 
     @PutMapping("/api/profiles")
-    public ProfileResponse saveProfile(@RequestBody CreateProfileRequest request) {
+    public ProfileResponse createProfile(@RequestBody CreateProfileRequest request) {
         int newProfileId = profileService.newProfile(
                 request.name,
                 request.birth,
