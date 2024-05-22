@@ -62,16 +62,23 @@ public class MedInfoApiController {
         return convertToDto(medInfos);
     }
 
-    @PostMapping("/api/profiles/{id}/medInfo/{medInfoId}/check")
-    public MedInfoResponse setAlarm(@PathVariable("medInfoId") Long id) throws Exception {
+    @PutMapping("/api/profiles/{id}/medInfo/{medInfoId}/check")
+    public MedInfoResponse check(@PathVariable("medInfoId") Long id) throws Exception {
         medInfoService.setCheck(id);
         return new MedInfoResponse(id, "복용이 체크되었습니다.");
     }
 
+
+
     @DeleteMapping("/api/profiles/{id}/medInfo/{medInfoId}/check")
-    public MedInfoResponse cancelAlarm(@PathVariable("medInfoId") Long id) {
+    public MedInfoResponse cancelCheck(@PathVariable("medInfoId") Long id) {
         medInfoService.cancelCheck(id);
         return new MedInfoResponse(id, "복용 체크가 해제되었습니다.");
+    }
+
+    @GetMapping("/api/profiles/{id}/medInfo/{medInfoId}/check")
+    public boolean isChecked(@PathVariable("medInfoId") Long id) {
+        return medInfoService.isChecked(id);
     }
 
     @GetMapping("/api/profiles/{id}/medInfo/{period}")
