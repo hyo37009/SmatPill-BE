@@ -18,7 +18,7 @@ public class ProfileApiController {
     private final ProfileService profileService;
 
     @GetMapping("/api/profiles/{id}")
-    public Result findAll(@PathVariable("id") int id) {
+    public Result findAll(@PathVariable("id") int id) throws Exception {
         Profile profile = profileService.getProfile(id);
         return new Result<>(profile);
     }
@@ -55,7 +55,7 @@ public class ProfileApiController {
     }
 
     @PostMapping("/api/profiles/{id}")
-    public ProfileResponse updateProfile(@PathVariable("id") int id, @RequestBody UpdateProfileRequest request){
+    public ProfileResponse updateProfile(@PathVariable("id") int id, @RequestBody UpdateProfileRequest request) throws Exception {
         Profile profile = profileService.getProfile(id);
         profileService.updateProfile(id, request.name, request.height, request.weight, request.nickname);
 
@@ -63,7 +63,7 @@ public class ProfileApiController {
     }
 
     @DeleteMapping("/api/profiles/{id}")
-    public ProfileResponse deleteProfile(@PathVariable("id") int id){
+    public ProfileResponse deleteProfile(@PathVariable("id") int id) throws Exception {
         profileService.deleteProfile(id);
         return new ProfileResponse(id, "정상적으로 삭제되었습니다.");
     }

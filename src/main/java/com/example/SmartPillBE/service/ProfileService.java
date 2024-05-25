@@ -58,8 +58,12 @@ public class ProfileService {
     /**
      * 프로필 조회
      */
-    public Profile getProfile(int profileId){
-        return profileRepository.findOne(profileId);
+    public Profile getProfile(int profileId) throws Exception {
+        Profile profile = profileRepository.findOne(profileId);
+        if(profile == null){
+            throw new Exception("프로필 아이디가 올바르지 않습니다.");
+        }
+        return profile;
     }
 
     public List<Profile> findAll(){
@@ -67,8 +71,11 @@ public class ProfileService {
     }
 
     @Transactional
-    public boolean deleteProfile(int id) {
+    public boolean deleteProfile(int id) throws Exception {
         Profile profile = profileRepository.findOne(id);
+        if(profile == null){
+            throw new Exception("프로필 아이디가 올바르지 않습니다.");
+        }
         profileRepository.delete(profile);
         return true;
     }

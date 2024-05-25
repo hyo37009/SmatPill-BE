@@ -37,4 +37,8 @@ public class MedInfoRepository {
                 .setParameter("period", period)
                 .getResultList();
     }
+
+    public void delete(MedInfo medInfo){
+        em.remove(medInfo);
+    }
 }

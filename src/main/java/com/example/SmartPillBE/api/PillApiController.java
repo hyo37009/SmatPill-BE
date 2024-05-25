@@ -22,7 +22,7 @@ public class PillApiController {
     private final PillService pillService;
 
     @GetMapping("/api/pill/{pillNumber}")
-    public PillResponseForApp searchByNumber(@PathVariable("pillNumber") String pillNumber){
+    public PillResponseForApp searchByNumber(@PathVariable("pillNumber") String pillNumber) throws Exception {
         Pill pill = pillService.findByNumber(pillNumber);
         if(pill == null){
             return null;

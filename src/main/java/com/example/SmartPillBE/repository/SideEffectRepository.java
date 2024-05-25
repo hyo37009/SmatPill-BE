@@ -35,6 +35,9 @@ public class SideEffectRepository {
                 .setParameter("pill", pill)
                 .getResultList();
     }
+    public void delete(SideEffect sideEffect){
+        em.remove(sideEffect);
+    }
 
 
 }

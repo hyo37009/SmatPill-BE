@@ -23,11 +23,10 @@ public class Bookmark {
     private String memo;
 
     // 연관관계 메서드 //
-    public static Bookmark createBookmark(Profile profile, Pill pill, String memo){
+    public static Bookmark createBookmark(Profile profile, Pill pill){
         Bookmark bookmark = new Bookmark();
         bookmark.profile = profile;
         bookmark.pill = pill;
-        bookmark.memo = memo;
         return bookmark;
     }
 

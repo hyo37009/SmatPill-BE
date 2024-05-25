@@ -17,8 +17,12 @@ public class PillService {
         return pillRepository.findByName(pillName);
     }
 
-    public Pill findByNumber(String pillNumber){
-        return pillRepository.findByNumber(pillNumber);
+    public Pill findByNumber(String pillNumber) throws Exception {
+        Pill pill = pillRepository.findByNumber(pillNumber);
+        if (pill == null){
+            throw new Exception("존재하지 않는 약번호입니다.");
+        }
+        return pill;
     }
 
     public List<Pill> findByShape(String shape){
