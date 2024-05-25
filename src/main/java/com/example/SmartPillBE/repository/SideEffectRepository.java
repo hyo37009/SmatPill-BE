@@ -5,7 +5,6 @@ import com.example.SmartPillBE.domain.Profile;
 import com.example.SmartPillBE.domain.SideEffect;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -40,4 +39,11 @@ public class SideEffectRepository {
     }
 
 
+    public SideEffect findByProfileAndPill(Profile profile, Pill pill) {
+        return em.createQuery("select s from SideEffect s " +
+                        "where s.profile = :profile and s.pill = :pill", SideEffect.class)
+                .setParameter("profile", profile)
+                .setParameter("pill", pill)
+                .getSingleResult();
+    }
 }

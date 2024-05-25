@@ -1,9 +1,11 @@
 package com.example.SmartPillBE.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@Getter
 public class SideEffect {
     @Id
     @GeneratedValue
@@ -20,8 +22,15 @@ public class SideEffect {
 
     @Setter
     @Column
-    private String contents;
+    private String memo;
 
+    public static SideEffect createSideEffect(Profile profile, Pill pill, String memo){
+        SideEffect sideEffect = new SideEffect();
+        sideEffect.profile = profile;
+        sideEffect.pill = pill;
+        sideEffect.memo = memo;
+        return sideEffect;
+    }
 
 
 }
