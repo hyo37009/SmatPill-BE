@@ -7,12 +7,25 @@ import com.example.SmartPillBE.service.ChatHistoryContentService;
 import com.example.SmartPillBE.service.ChatHistoryService;
 import com.example.SmartPillBE.service.ChatbotService;
 import com.example.SmartPillBE.service.ProfileService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
+import reactor.netty.http.client.HttpClient;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -20,10 +33,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.cert.Certificate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequiredArgsConstructor
@@ -60,7 +75,7 @@ public class ChatHistoryApiController {
 
     @Transactional
     @PostMapping("/api/profiles/{id}/chatting/{chatId}")
-    public List<ChatHistoryContent> saveNewMessage(@PathVariable("chatId") Long id, @RequestBody String message) throws IOException {
+    public void saveNewMessage(@PathVariable("chatId") Long id, @RequestBody String message) throws IOException {
         ChatHistory chatHistory = chatHistoryService.findById(id);
         chatHistoryContentService.createContent(chatHistory, message);
 
@@ -69,10 +84,12 @@ public class ChatHistoryApiController {
                 .map(ChatHistoryContent::getContent)
                 .collect(Collectors.toList());
 
-        String chatted = chat(message, history);
-        chatHistoryContentService.createContent(chatHistory, chatted);
+        chat(message, history);
 
-        return chatHistory.getChatHistoryContents();
+
+
+//        chatHistoryContentService.createContent(chatHistory, chatted);
+//        return chatted;
     }
 
     @GetMapping("/api/profiles/{id}/chatting/{chatId}")
