@@ -3,18 +3,25 @@ package com.example.SmartPillBE.api;
 import com.example.SmartPillBE.domain.ChatHistory;
 import com.example.SmartPillBE.domain.ChatHistoryContent;
 import com.example.SmartPillBE.domain.Profile;
-import com.example.SmartPillBE.repository.ChatHistoryContentRepository;
+import com.example.SmartPillBE.service.ChatHistoryContentService;
 import com.example.SmartPillBE.service.ChatHistoryService;
+import com.example.SmartPillBE.service.ChatbotService;
 import com.example.SmartPillBE.service.ProfileService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
+import org.json.JSONObject;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +31,8 @@ import java.util.stream.Collectors;
 public class ChatHistoryApiController {
     private final ChatHistoryService chatHistoryService;
     private final ProfileService profileService;
-    private final ChatHistoryContentRepository chatHistoryContentRepository;
+    private final ChatHistoryContentService chatHistoryContentService;
+    private final ChatbotService chatbot;
     @GetMapping("/api/profiles/{id}/chatting")
     public List<ChatResponseDto> getAllByProfile(@PathVariable("id") int id) throws Exception {
         Profile profile = profileService.getProfile(id);
@@ -44,29 +52,35 @@ public class ChatHistoryApiController {
 
     @Transactional
     @PutMapping("/api/profiles/{id}/chatting")
-    public ChatResponse createNewChatHistory(@PathVariable("id") int profileId) throws Exception {
+    public GeneralResponse createNewChatHistory(@PathVariable("id") int profileId) throws Exception {
         Profile profile = profileService.getProfile(profileId);
         ChatHistory newHistory = chatHistoryService.createNewHistory(profile);
-        return new ChatResponse(newHistory.getId(), "생성되었습니다.");
+        return new GeneralResponse(newHistory.getId(), "생성되었습니다.");
     }
 
     @Transactional
-    @PutMapping("api/profiles/{id}/chatting/{chatId}")
-    public ChatResponse saveNewMessage(@PathVariable("chatId") Long id, @RequestBody String message) {
+    @PostMapping("/api/profiles/{id}/chatting/{chatId}")
+    public List<ChatHistoryContent> saveNewMessage(@PathVariable("chatId") Long id, @RequestBody String message) throws IOException {
         ChatHistory chatHistory = chatHistoryService.findById(id);
-        ChatHistoryContent content = ChatHistoryContent.createChatHistoryContent(chatHistory, message);
-        ChatHistoryContent saved = chatHistoryContentRepository.save(content);
-        chatHistory.chatHistoryContents.add(saved);
+        chatHistoryContentService.createContent(chatHistory, message);
 
-        return new ChatResponse(id, "정상적으로 저장되었습니다.");
+        List<String> history = chatHistory.getChatHistoryContents()
+                .stream()
+                .map(ChatHistoryContent::getContent)
+                .collect(Collectors.toList());
+
+        String chatted = chat(message, history);
+        chatHistoryContentService.createContent(chatHistory, chatted);
+
+        return chatHistory.getChatHistoryContents();
     }
 
-    @GetMapping("api/profiles/{id}/chatting/{chatId}")
+    @GetMapping("/api/profiles/{id}/chatting/{chatId}")
     public List<String> getChatting(@PathVariable("chatId") Long id) {
         return chatHistoryService.getChattingById(id);
     }
 
-    @GetMapping("api/profiles/{id}/chatting/{chatId}/{num}")
+    @GetMapping("/api/profiles/{id}/chatting/{chatId}/{num}")
     public List<String> getNthMessage(@PathVariable("chatId") Long id, @PathVariable("num") int num) {
         return chatHistoryService.getNthChat(id, num);
     }
@@ -89,9 +103,55 @@ public class ChatHistoryApiController {
 
     @Data
     @AllArgsConstructor
-    static class ChatResponse {
-        Long id;
+    static class Req {
         String message;
+        List<String> history;
+    }
 
+    private String chat(String message, List<String> history) throws IOException {
+        URL url = new URL("http://15.165.129.252:5000/api/ai");
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setUseCaches(false);
+        con.setDoInput(true);
+        con.setDoOutput(true);
+        con.setRequestMethod("POST");
+        con.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+
+        JSONObject json = new JSONObject();
+        json.put("message", "안녕");
+        json.put("history", new ArrayList<>());
+
+//        System.out.println("json = " + json);
+
+        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+        wr.writeBytes(json.toString());
+        wr.flush();
+        wr.close();
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
+        String inputLine;
+        StringBuilder response = new StringBuilder();
+        while ((inputLine = br.readLine()) != null) {
+            response.append(inputLine);
+        }
+        br.close();
+
+        String korResponse = uniToKor(response.toString());
+
+        return korResponse.substring(16, korResponse.length() - 3);
+    }
+    public String uniToKor(String uni){
+        StringBuffer result = new StringBuffer();
+
+        for(int i=0; i<uni.length(); i++){
+            if(uni.charAt(i) == '\\' &&  uni.charAt(i+1) == 'u'){
+                Character c = (char)Integer.parseInt(uni.substring(i+2, i+6), 16);
+                result.append(c);
+                i+=5;
+            }else{
+                result.append(uni.charAt(i));
+            }
+        }
+        return result.toString();
     }
 }
