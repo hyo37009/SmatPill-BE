@@ -109,6 +109,11 @@ public class MedInfoService {
         return medInfo.isStatus();
     }
 
+    public boolean isAlarmSet(Long id) {
+        MedInfo medInfo = medInfoRepository.findOne(id);
+        return medInfo.isAlarmSet();
+    }
+
     private medPeriod parseMedPeriod(String period) throws Exception {
         return switch (period.toUpperCase()) {
             case "아침", "MORNING" -> medPeriod.MORNING;

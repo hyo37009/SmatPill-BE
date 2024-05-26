@@ -10,7 +10,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ChatRepositoryContentService {
+public class ChatHistoryContentService {
     private final ChatHistoryContentRepository contentRepository;
 
     public Long createContent(ChatHistory chatHistory, String content){

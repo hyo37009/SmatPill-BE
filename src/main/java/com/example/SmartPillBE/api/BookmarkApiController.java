@@ -39,7 +39,7 @@ public class BookmarkApiController {
     }
 
     @GetMapping("/api/profiles/{id}/bookmarks/{pillNumber}")
-    public String getBookmarkMemo(@PathVariable("id") int profileId, @PathVariable("pillNumber") String pillNumber) throws Exception {
+    public String getMemo(@PathVariable("id") int profileId, @PathVariable("pillNumber") String pillNumber) throws Exception {
         return bookmarkService.getMemo(profileId, pillNumber);
     }
 

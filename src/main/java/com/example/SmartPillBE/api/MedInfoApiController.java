@@ -41,7 +41,7 @@ public class MedInfoApiController {
     }
 
     @PostMapping("/api/profiles/{id}/medInfo/{medInfoId}/alarm/{time}")
-    public MedInfoResponse setAlarm(@PathVariable("id") int profileId, @PathVariable("medInfoId") Long id, @PathVariable("time") String time) throws Exception {
+    public MedInfoResponse setAlarm(@PathVariable("medInfoId") Long id, @PathVariable("time") String time) throws Exception {
         if (!time.matches("(2[0-3]|[01][0-9]):[0-5][0-9]")) {
             throw new Exception("시간 형식이 잘못되었습니다 : " + time);
         }
@@ -50,9 +50,13 @@ public class MedInfoApiController {
     }
 
     @DeleteMapping("/api/profiles/{id}/medInfo/{medInfoId}/alarm")
-    public MedInfoResponse cancelAlarm(@PathVariable("id") int profileId, @PathVariable("medInfoId") Long id) {
+    public MedInfoResponse cancelAlarm(@PathVariable("medInfoId") Long id) {
         medInfoService.cancelAlarm(id);
         return new MedInfoResponse(id, "알람이 정상적으로 해제되었습니다.");
+    }
+    @GetMapping("/api/profiles/{id}/medInfo/{medInfoId}/alarm")
+    public boolean isAlarmSet( @PathVariable("medInfoId") Long id){
+        return medInfoService.isAlarmSet(id);
     }
 
     @PostMapping("/api/profiles/{id}/medInfo/{period}")

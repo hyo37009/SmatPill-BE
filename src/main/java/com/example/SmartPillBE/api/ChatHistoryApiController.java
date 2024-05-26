@@ -7,38 +7,20 @@ import com.example.SmartPillBE.service.ChatHistoryContentService;
 import com.example.SmartPillBE.service.ChatHistoryService;
 import com.example.SmartPillBE.service.ChatbotService;
 import com.example.SmartPillBE.service.ProfileService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
-import reactor.netty.http.client.HttpClient;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.cert.Certificate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RestController
 @RequiredArgsConstructor
@@ -48,6 +30,7 @@ public class ChatHistoryApiController {
     private final ProfileService profileService;
     private final ChatHistoryContentService chatHistoryContentService;
     private final ChatbotService chatbot;
+
     @GetMapping("/api/profiles/{id}/chatting")
     public List<ChatResponseDto> getAllByProfile(@PathVariable("id") int id) throws Exception {
         Profile profile = profileService.getProfile(id);
@@ -75,7 +58,7 @@ public class ChatHistoryApiController {
 
     @Transactional
     @PostMapping("/api/profiles/{id}/chatting/{chatId}")
-    public void saveNewMessage(@PathVariable("chatId") Long id, @RequestBody String message) throws IOException {
+    public String saveNewMessage(@PathVariable("chatId") Long id, @RequestBody String message) throws IOException {
         ChatHistory chatHistory = chatHistoryService.findById(id);
         chatHistoryContentService.createContent(chatHistory, message);
 
@@ -84,12 +67,53 @@ public class ChatHistoryApiController {
                 .map(ChatHistoryContent::getContent)
                 .collect(Collectors.toList());
 
-        chat(message, history);
 
+        String result = getResult(message, history);
+        chatHistoryContentService.createContent(chatHistory, result);
+        return result;
+    }
+
+    private String getResult(String message, List<String> history) throws IOException {
+        URL url = new URL("http://15.165.129.252:5000/api/ai");
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setUseCaches(false);
+        con.setDoInput(true);
+        con.setDoOutput(true);
+        con.setRequestMethod("POST");
+        con.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+
+        JSONObject json = new JSONObject();
+        json.put("message", message);
+        json.put("history", history);
+
+        System.out.println("json = " + json);
+
+//        OutputStream os = con.getOutputStream();
+
+        String body = json.toString();
+
+//        os.write(body.getBytes("euc-kr"));
+
+        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+        wr.write(body.getBytes("utf-8"));
+        wr.flush();
+        wr.close();
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
+        String inputLine;
+        StringBuilder response = new StringBuilder();
+        while ((inputLine = br.readLine()) != null) {
+            response.append(inputLine);
+        }
+        br.close();
+
+        String korResponse = uniToKor(response.toString());
+
+//            return korResponse.substring(16, korResponse.length() - 3);
 
 
 //        chatHistoryContentService.createContent(chatHistory, chatted);
-//        return chatted;
+        return korResponse.substring(16, korResponse.length() - 3);
     }
 
     @GetMapping("/api/profiles/{id}/chatting/{chatId}")
@@ -112,7 +136,7 @@ public class ChatHistoryApiController {
 
     @Data
     @AllArgsConstructor
-    static class ChatContentDto{
+    static class ChatContentDto {
         Long id;
         String timeStamp;
         String content;
@@ -120,55 +144,24 @@ public class ChatHistoryApiController {
 
     @Data
     @AllArgsConstructor
-    static class Req {
+    static class ChatDto {
         String message;
         List<String> history;
     }
 
-    private String chat(String message, List<String> history) throws IOException {
-        URL url = new URL("http://15.165.129.252:5000/api/ai");
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setUseCaches(false);
-        con.setDoInput(true);
-        con.setDoOutput(true);
-        con.setRequestMethod("POST");
-        con.setRequestProperty("Content-Type", "application/json; charset=utf-8");
-
-        JSONObject json = new JSONObject();
-        json.put("message", "안녕");
-        json.put("history", new ArrayList<>());
-
-//        System.out.println("json = " + json);
-
-        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-        wr.writeBytes(json.toString());
-        wr.flush();
-        wr.close();
-
-        BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
-        String inputLine;
-        StringBuilder response = new StringBuilder();
-        while ((inputLine = br.readLine()) != null) {
-            response.append(inputLine);
-        }
-        br.close();
-
-        String korResponse = uniToKor(response.toString());
-
-        return korResponse.substring(16, korResponse.length() - 3);
-    }
-    public String uniToKor(String uni){
+    public String uniToKor(String uni) {
         StringBuffer result = new StringBuffer();
 
-        for(int i=0; i<uni.length(); i++){
-            if(uni.charAt(i) == '\\' &&  uni.charAt(i+1) == 'u'){
-                Character c = (char)Integer.parseInt(uni.substring(i+2, i+6), 16);
+        for (int i = 0; i < uni.length(); i++) {
+            if (uni.charAt(i) == '\\' && uni.charAt(i + 1) == 'u') {
+                Character c = (char) Integer.parseInt(uni.substring(i + 2, i + 6), 16);
                 result.append(c);
-                i+=5;
-            }else{
+                i += 5;
+            } else {
                 result.append(uni.charAt(i));
             }
         }
         return result.toString();
     }
+
 }

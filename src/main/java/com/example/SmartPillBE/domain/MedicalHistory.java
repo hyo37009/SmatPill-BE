@@ -2,13 +2,15 @@ package com.example.SmartPillBE.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
+
+import java.time.LocalDate;
 
 /**
  * 복약정보
  */
 @Entity
 @Getter
-@Table(name = "medical_history")
 public class MedicalHistory {
     @Id
     @GeneratedValue
@@ -19,12 +21,20 @@ public class MedicalHistory {
     @JoinColumn(name = "profile_id")
     private Profile profile;
 
-    private String disease;
+    private String disease; // 병명
 
+    LocalDate diagnosis; // 진단 날짜
 
-    private String diagnosis;
-
-
+    @Setter
     private String memo;
+
+    public static MedicalHistory createMedicalHistory(Profile profile, String disease,
+                                                      LocalDate diagnosis){
+        MedicalHistory medicalHistory = new MedicalHistory();
+        medicalHistory.profile = profile;
+        medicalHistory.disease = disease;
+        medicalHistory.diagnosis = diagnosis;
+        return medicalHistory;
+    }
 
 }
