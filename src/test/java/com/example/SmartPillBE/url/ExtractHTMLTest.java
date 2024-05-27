@@ -16,11 +16,11 @@ class ExtractHTMLTest {
     void extractHTML() {
 
 //        String pillNumber = "202200658"; //우먼스타이레놀
-//        String pillNumber = "197900277";//게보린
+        String pillNumber = "197900277";//게보린
 //        String pillNumber = "196000011"; //페니라민정
 //        String pillNumber = "198200403";
 //        String pillNumber = "197900575";
-        String pillNumber = "199000707"; //메녹틸정
+//        String pillNumber = "199000707"; //메녹틸정
 
         PillDetailUrlGenerator pilldetail = new PillDetailUrlGenerator();
         String url = pilldetail.generatePillUrl(pillNumber);
@@ -53,9 +53,24 @@ class ExtractHTMLTest {
 
         List<String> keyy = new ArrayList<>(Arrays.asList("효능효과", "용법용량", "다음 환자에는 투여하지 말 것.", "다음 환자에는 신중히 투여할 것.", "이상반응", "부작용", "일반적 주의", "상호작용"));
 
+        for (String key : keyList) {
+            List<List<String>> extractedText = extractHTML.returnText(key, onlyText);
+            if (!extractedText.isEmpty()) {
+//                System.out.println("=== " + key + " ===");
+                System.out.println(extractedText);
+            }
+        }
+
+        for (String keys : keyy) {
+            List<List<String>> extractedText = extractHTML.returnText(keys, onlyText);
+            if (!extractedText.isEmpty()) {
+//                System.out.println("=== " + keys + " ===");
+                System.out.println(extractedText);
+            }
+        }
 
 
-
+/*
 //        String key = "내용";//리스트
         for(String key : keyList){
 //            List<String> extractedText = extractHTML.returnText(key, onlyText);
@@ -71,7 +86,7 @@ class ExtractHTMLTest {
 ////            List<String> extractedText = extractHTML.returnText(key, onlyText);
 //            System.out.println(extractHTML.returnText(key, onlyText));
 //        }
-        //List<String> text = extractHTML.findInfo(onlyText);
+        //List<String> text = extractHTML.findInfo(onlyText);*/
     }
 
 }
