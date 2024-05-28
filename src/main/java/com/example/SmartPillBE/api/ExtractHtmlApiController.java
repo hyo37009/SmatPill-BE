@@ -16,7 +16,7 @@ import java.util.List;
 public class ExtractHtmlApiController {
     private final ExtractHtmlService extractHtmlService;
 
-    @GetMapping("/api/pill/{pillNumber}")
+    @GetMapping("/api/pill/{pillNumber}/detail")
     public List<PillDetailDto> getPillDetail(@PathVariable("pillNumber") String pillNumber){
         List<List<String>> results = extractHtmlService.getResult(pillNumber);
         List<PillDetailDto> returnList = new ArrayList<>();

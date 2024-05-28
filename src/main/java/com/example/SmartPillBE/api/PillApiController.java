@@ -4,13 +4,19 @@ import com.example.SmartPillBE.domain.Pill;
 import com.example.SmartPillBE.service.PillService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,37 +44,38 @@ public class PillApiController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/api/pill/print/{print}")
-    public List<PillResponseForAiModel> searchByPrint(@PathVariable("print") String print){
-        List<Pill> pills = pillService.findByPrint(print);
-        return pills.stream()
-                .map(PillResponseForAiModel::new)
-                .collect(Collectors.toList());
-    }
-
-    @GetMapping("/api/pill/shape/{shape}")
-    public List<PillResponseForAiModel> searchByShape(@PathVariable("shape") String shape){
-        List<Pill> pills = pillService.findByShape(shape);
-        return pills.stream()
-                .map(PillResponseForAiModel::new)
-                .collect(Collectors.toList());
-    }
-
-    @GetMapping("/api/pill/line/{line}")
-    public List<PillResponseForAiModel> searchByLine(@PathVariable("line") String line){
-        List<Pill> pills = pillService.findByLine(line);
-        return pills.stream()
-                .map(PillResponseForAiModel::new)
-                .collect(Collectors.toList());
-    }
-
-    @GetMapping("/api/pill/color/{color}")
-    public List<PillResponseForAiModel> searchByColor(@PathVariable("color") String color){
-        List<Pill> pills = pillService.findByColor(color);
-        return pills.stream()
-                .map(PillResponseForAiModel::new)
-                .collect(Collectors.toList());
-    }
+//    @PostMapping("/api/pill/")
+//    public List<Pill> searchByImage(@RequestPart(value = "image")MultipartFile image) throws IOException {
+//        URL url = new URL("http://15.165.129.252:5000/api/ai/detection");
+//        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+//        con.setUseCaches(false);
+//        con.setDoInput(true);
+//        con.setDoOutput(true);
+//        con.setRequestMethod("POST");
+//        con.setRequestProperty("Content-Type", "multipart/form-data; charset=utf-8");
+//
+//        JSONObject jsonObject = new JSONObject();
+//        jsonObject.put("image", image);
+//
+//        String body = jsonObject.toString();
+//
+//        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+//        wr.write(body.getBytes("utf-8"));
+//        wr.flush();
+//        wr.close();
+//
+//        BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
+//        String inputLine;
+//        StringBuilder response = new StringBuilder();
+//        while ((inputLine = br.readLine()) != null) {
+//            response.append(inputLine);
+//        }
+//        br.close();
+//
+//        String korResponse = uniToKor(response.toString());
+//
+//        return null;
+//    }
 
     @Data
     private static class PillResponseForApp{
@@ -90,28 +97,19 @@ public class PillApiController {
 
     }
 
-    @Data
-    private static class PillResponseForAiModel{
-        private String pillNumber;
-        private String pillName;
-        private String printFront;
-        private String printBack;
-        private String shape;
-        private String colorFront;
-        private String colorBack;
-        private String lineFront;
-        private String lineBack;
+    public String uniToKor(String uni) {
+        StringBuffer result = new StringBuffer();
 
-        private PillResponseForAiModel(Pill pill){
-            this.pillNumber = pill.getPillNumber();
-            this.pillName = pill.getPillName();
-            this.printFront = pill.getPrintFront();
-            this.printBack = pill.getPrintBack();
-            this.shape = pill.getShape();
-            this.colorFront = pill.getColorFront();
-            this.colorBack = pill.getColorBack();
+        for (int i = 0; i < uni.length(); i++) {
+            if (uni.charAt(i) == '\\' && uni.charAt(i + 1) == 'u') {
+                Character c = (char) Integer.parseInt(uni.substring(i + 2, i + 6), 16);
+                result.append(c);
+                i += 5;
+            } else {
+                result.append(uni.charAt(i));
+            }
         }
-
+        return result.toString();
     }
 
 
