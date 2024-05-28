@@ -1,4 +1,4 @@
-package com.example.SmartPillBE.service;
+package com.example.SmartPillBE.service.getPillInfo;
 
 import com.example.SmartPillBE.domain.Pill;
 import com.example.SmartPillBE.ocr.OCRGeneralAPI;

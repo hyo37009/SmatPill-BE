@@ -34,7 +34,7 @@ public class InferTextExtractor {
             JSONObject image = new JSONObject();
             image.put("format", "jpg");
 
-            // 이미지 파일을 바이트 배열로 변환하여 전송
+
             File file = new File(imagePath);
             FileInputStream inputStream = new FileInputStream(file);
             byte[] buffer = new byte[inputStream.available()];
@@ -47,13 +47,12 @@ public class InferTextExtractor {
             json.put("images", images);
             String postParams = json.toString();
 
-            // HTTP 요청 전송
+
             DataOutputStream wr = new DataOutputStream(con.getOutputStream());
             wr.writeBytes(postParams);
             wr.flush();
             wr.close();
 
-            // HTTP 응답 처리
             int responseCode = con.getResponseCode();
             BufferedReader br;
             if (responseCode == 200) {
@@ -65,7 +64,7 @@ public class InferTextExtractor {
                 }
                 br.close();
 
-                // JSON 파싱하여 inferText 값만 추출
+
                 JSONObject jsonResponse = new JSONObject(response.toString());
                 JSONArray fields = jsonResponse.getJSONArray("images").getJSONObject(0).getJSONArray("fields");
                 for (int i = 0; i < fields.length(); i++) {

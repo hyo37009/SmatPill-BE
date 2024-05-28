@@ -1,9 +1,7 @@
-package com.example.SmartPillBE.service;
+package com.example.SmartPillBE.service.getPillInfo;
 import java.net.URLEncoder;
 
 public class PillDetailUrlGenerator {
-
-
     public String generatePillUrl(String pillNumber) {
         try {
             String baseUrl = "https://nedrug.mfds.go.kr/pbp/CCBBB01/getItemDetailCache?cacheSeq=";
