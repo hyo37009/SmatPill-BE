@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @Service
@@ -22,7 +23,7 @@ public class ChatHistoryService {
 
     @Transactional
     public ChatHistory createNewHistory(Profile profile){
-        ChatHistory chatHistory = ChatHistory.CreateChatHistory(profile, LocalDateTime.now());
+        ChatHistory chatHistory = ChatHistory.CreateChatHistory(profile, LocalDateTime.now(ZoneId.of("Asia/Seoul")));
         chatHistoryRepository.save(chatHistory);
         return chatHistory;
     }

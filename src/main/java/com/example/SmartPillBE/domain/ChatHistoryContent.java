@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Entity
 @Getter
@@ -29,7 +30,7 @@ public class ChatHistoryContent {
         ChatHistoryContent chatHistoryContent = new ChatHistoryContent();
         chatHistoryContent.content = content;
         chatHistoryContent.chatHistory = chatHistory;
-        chatHistoryContent.timeStamp = LocalDateTime.now();
+        chatHistoryContent.timeStamp = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         return chatHistoryContent;
     }
 }
