@@ -117,8 +117,13 @@ public class ChatHistoryApiController {
     }
 
     @GetMapping("/api/profiles/{id}/chatting/{chatId}")
-    public List<String> getChatting(@PathVariable("chatId") Long id) {
-        return chatHistoryService.getChattingById(id);
+    public List<GetChetDto> getChatting(@PathVariable("chatId") Long id) {
+        return chatHistoryService.getChattingById(id)
+                .stream()
+                .map(c -> new GetChetDto(
+                        c.getTimeStamp().toString(),
+                        c.getContent()
+                )).collect(Collectors.toList());
     }
 
     @GetMapping("/api/profiles/{id}/chatting/{chatId}/{num}")
@@ -147,6 +152,13 @@ public class ChatHistoryApiController {
     static class ChatDto {
         String message;
         List<String> history;
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class GetChetDto{
+        String timestamp;
+        String message;
     }
 
     public String uniToKor(String uni) {
