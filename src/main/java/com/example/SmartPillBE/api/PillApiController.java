@@ -44,38 +44,38 @@ public class PillApiController {
                 .collect(Collectors.toList());
     }
 
-//    @PostMapping("/api/pill/")
-//    public List<Pill> searchByImage(@RequestPart(value = "image")MultipartFile image) throws IOException {
-//        URL url = new URL("http://15.165.129.252:5000/api/ai/detection");
-//        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-//        con.setUseCaches(false);
-//        con.setDoInput(true);
-//        con.setDoOutput(true);
-//        con.setRequestMethod("POST");
-//        con.setRequestProperty("Content-Type", "multipart/form-data; charset=utf-8");
-//
-//        JSONObject jsonObject = new JSONObject();
-//        jsonObject.put("image", image);
-//
-//        String body = jsonObject.toString();
-//
-//        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-//        wr.write(body.getBytes("utf-8"));
-//        wr.flush();
-//        wr.close();
-//
-//        BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
-//        String inputLine;
-//        StringBuilder response = new StringBuilder();
-//        while ((inputLine = br.readLine()) != null) {
-//            response.append(inputLine);
-//        }
-//        br.close();
-//
-//        String korResponse = uniToKor(response.toString());
-//
-//        return null;
-//    }
+    @PostMapping("/api/pill/")
+    public List<Pill> searchByImage(@RequestPart(value = "image")MultipartFile image) throws IOException {
+        URL url = new URL("http://15.165.129.252:5000/api/ai/detection");
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setUseCaches(false);
+        con.setDoInput(true);
+        con.setDoOutput(true);
+        con.setRequestMethod("POST");
+        con.setRequestProperty("Content-Type", "multipart/form-data; charset=utf-8");
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("image", image);
+
+        String body = jsonObject.toString();
+
+        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+        wr.write(body.getBytes("utf-8"));
+        wr.flush();
+        wr.close();
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
+        String inputLine;
+        StringBuilder response = new StringBuilder();
+        while ((inputLine = br.readLine()) != null) {
+            response.append(inputLine);
+        }
+        br.close();
+
+        String korResponse = uniToKor(response.toString());
+
+        return null;
+    }
 
     @Data
     private static class PillResponseForApp{
