@@ -32,7 +32,7 @@ public class SideEffectApiController {
     public GeneralResponse getMemo(@PathVariable("id") int profileId, @PathVariable("pillNumber") String pillNumber, @RequestBody String memo) throws Exception {
         SideEffect sideEffect = sideEffectService.findByProfileIdAndPillNumber(profileId, pillNumber);
         sideEffectService.setMemo(sideEffect.getId(), memo);
-        return new GeneralResponse(sideEffect.getId(), "정상적으로 설정되었습니다.");
+        return new GeneralResponse(sideEffect.getId().toString(), "정상적으로 설정되었습니다.");
     }
 
     @Transactional
@@ -41,14 +41,14 @@ public class SideEffectApiController {
         SideEffect sideEffect = sideEffectService.findByProfileIdAndPillNumber(profileId, pillNumber);
         Long id = sideEffect.getId();
         sideEffectService.setMemo(id, memo);
-        return new GeneralResponse(id, "정상적으로 수정되었습니다.");
+        return new GeneralResponse(id.toString(), "정상적으로 수정되었습니다.");
     }
 
     @Transactional
     @PutMapping("/api/profiles/{id}/sideEffects/{pillNumber}")
     public GeneralResponse createOne(@PathVariable("id") int profileId, @PathVariable("pillNumber") String pillNumber, @RequestBody String memo) throws Exception {
         Long id = sideEffectService.create(profileId, pillNumber, memo);
-        return new GeneralResponse(id, "정상적으로 생성되었습니다.");
+        return new GeneralResponse(id.toString(), "정상적으로 생성되었습니다.");
     }
 
     @Transactional

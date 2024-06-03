@@ -34,14 +34,14 @@ public class MedicalHistoryApiController {
     public GeneralResponse create(@PathVariable("id") int profileId, @RequestBody CreateMediHisRequest request) throws Exception {
         LocalDate date = LocalDate.parse(request.diagnosis, DateTimeFormatter.ISO_LOCAL_DATE);
         Long id = medicalHistoryService.create(profileId, request.disease, date);
-        return new GeneralResponse(id, "정상적으로 생성되었습니다.");
+        return new GeneralResponse(id.toString(), "정상적으로 생성되었습니다.");
     }
 
 
     @PostMapping("/api/profiles/{id}/medicalHistories/{historyId}")
     public GeneralResponse modifyMemo(@PathVariable("historyId") Long id, @RequestBody String memo){
         medicalHistoryService.setMemo(id, memo);
-        return new GeneralResponse(id, "정상적으로 수정되었습니다.");
+        return new GeneralResponse(id.toString(), "정상적으로 수정되었습니다.");
     }
 
     @DeleteMapping("/api/profiles/{id}/medicalHistories/{historyId}")

@@ -1,12 +1,10 @@
 package com.example.SmartPillBE.api;
 
 import com.example.SmartPillBE.domain.MedInfo;
-import com.example.SmartPillBE.domain.Pill;
 import com.example.SmartPillBE.service.MedInfoService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,8 +25,8 @@ public class MedInfoApiController {
     }
 
     @PutMapping("/api/profiles/{id}/medInfo")
-    public MedInfoResponse createMedInfo(@PathVariable("id") int profileId, @RequestBody CreateMedInfoRequest request) throws Exception {
-        Long medInfoId = medInfoService.createMedInfo(
+    public GeneralResponse createMedInfo(@PathVariable("id") int profileId, @RequestBody CreateMedInfoRequest request) throws Exception {
+        List<Long> medInfoIdList = medInfoService.createMedInfo(
                 profileId,
                 request.pillNumber,
                 request.howLong,
@@ -37,7 +35,7 @@ public class MedInfoApiController {
                 request.timing,
                 request.min,
                 request.eatTime);
-        return new MedInfoResponse(medInfoId, "생성되었습니다.");
+        return new GeneralResponse(null, "생성되었습니다.");
     }
 
     @PostMapping("/api/profiles/{id}/medInfo/{medInfoId}/alarm/{time}")
@@ -59,12 +57,6 @@ public class MedInfoApiController {
         return medInfoService.isAlarmSet(id);
     }
 
-    @PostMapping("/api/profiles/{id}/medInfo/{period}")
-    public Result getByPfAndPeriod(@PathVariable("id") int id,
-                                   @PathVariable("period") String period) throws Exception {
-        List<MedInfo> medInfos = medInfoService.findByPfIdAndPeriod(id, period);
-        return convertToDto(medInfos);
-    }
 
     @PutMapping("/api/profiles/{id}/medInfo/{medInfoId}/check")
     public MedInfoResponse check(@PathVariable("medInfoId") Long id) throws Exception {
@@ -85,9 +77,9 @@ public class MedInfoApiController {
         return medInfoService.isChecked(id);
     }
 
-    @GetMapping("/api/profiles/{id}/medInfo/{period}")
-    public Result findByPfAndPeriod(@PathVariable("id") int id, @PathVariable("period") String period) throws Exception {
-        List<MedInfo> medInfos = medInfoService.findByPfIdAndPeriod(id, period);
+    @GetMapping("/api/profiles/{id}/medInfo/{date}/{period}")
+    public Result findByDateAndPeriod(@PathVariable("id") int id, @PathVariable("date") String date, @PathVariable("period") String period) throws Exception {
+        List<MedInfo> medInfos = medInfoService.findByDateAndPeriod(id, date, period);
         return convertToDto(medInfos);
     }
 
@@ -97,8 +89,7 @@ public class MedInfoApiController {
                         m.getId(),
                         m.getPill().getPillNumber(),
                         m.getProfile().getId(),
-                        m.getHowLong(),
-                        m.getStartDate().toString(),
+                        m.getDate().toString(),
                         m.getDosageTime().getMedPeriod().toString(),
                         m.getDosageTime().getMedTiming().toString(),
                         m.getDosageTime().getTime_min(),
@@ -119,10 +110,10 @@ public class MedInfoApiController {
     @AllArgsConstructor
     static class MedInfoDto {
         private Long id;
-                private String pillNumber;
+        private String pillNumber;
 //        private Pill pill;
         private int profileId;
-        private int howLong;
+//        private int howLong;
         private String startDate;
         private String period;
         private String timing;

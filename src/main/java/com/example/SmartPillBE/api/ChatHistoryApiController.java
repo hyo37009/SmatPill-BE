@@ -53,7 +53,7 @@ public class ChatHistoryApiController {
     public GeneralResponse createNewChatHistory(@PathVariable("id") int profileId) throws Exception {
         Profile profile = profileService.getProfile(profileId);
         ChatHistory newHistory = chatHistoryService.createNewHistory(profile);
-        return new GeneralResponse(newHistory.getId(), "생성되었습니다.");
+        return new GeneralResponse(newHistory.getId().toString(), "생성되었습니다.");
     }
 
     @Transactional

@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -34,10 +35,10 @@ public class MedInfoService {
     }
 
     @Transactional
-    public Long createMedInfo(int profileId, String pillNumber,
-                              int howLong, String startDate,
-                              String period, String timing,
-                              int min, String eatTime) throws Exception {
+    public List<Long> createMedInfo(int profileId, String pillNumber,
+                                    int howLong, String startDate,
+                                    String period, String timing,
+                                    int min, String eatTime) throws Exception {
         Profile profile = profileRepository.findOne(profileId);
 
         if(profile == null){
@@ -56,9 +57,16 @@ public class MedInfoService {
         DosageTime dosageTime = getDosageTime(period, timing, min);
 
 
-        MedInfo medInfo = MedInfo.createMedInfo(pill, profile, howLong, stDate, dosageTime, eatTimeParse);
-        medInfoRepository.save(medInfo);
-        return medInfo.getId();
+//        MedInfo medInfo = MedInfo.createMedInfo(pill, profile, howLong, stDate, dosageTime, eatTimeParse);
+        List<Long> idList = new ArrayList<>();
+
+        for(int i = 0; i < howLong; i++){
+            MedInfo medInfo = MedInfo.createMedInfo(pill, profile, stDate.plusDays(i), dosageTime, eatTimeParse);
+            medInfoRepository.save(medInfo);
+            idList.add(medInfo.getId());
+        }
+
+        return idList;
     }
 
     private DosageTime getDosageTime(String period, String timing, int min) throws Exception {
@@ -69,13 +77,20 @@ public class MedInfoService {
         return dosageTime;
     }
 
-    public List<MedInfo> findByPfIdAndPeriod(int profileId, String medPeriod) throws Exception {
-        Profile profile = profileRepository.findOne(profileId);
-        return medInfoRepository.findByProfileAndPeriod(profile, parseMedPeriod(medPeriod));
-    }
-
     public List<MedInfo> findByProfileId(int profileId){
         return medInfoRepository.findByProfileId(profileId);
+    }
+
+    public List<MedInfo> findByDate(int profileId, LocalDate date){
+        Profile profile = profileRepository.findOne(profileId);
+        return medInfoRepository.findByDate(profile, date);
+    }
+
+    public List<MedInfo> findByDateAndPeriod(int profileId, String date, String period) throws Exception {
+        Profile profile = profileRepository.findOne(profileId);
+        LocalDate parseDate = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
+        medPeriod parsedMedPeriod = parseMedPeriod(period);
+        return medInfoRepository.findByDateAndPeriod(profile, parseDate, parsedMedPeriod);
     }
 
     @Transactional

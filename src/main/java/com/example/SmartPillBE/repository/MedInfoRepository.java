@@ -31,32 +31,25 @@ public class MedInfoRepository {
                 .getResultList();
     }
 
-    public List<MedInfo> findByProfileAndPeriod(Profile profile, medPeriod period){
-//        Profile profile = em.find(Profile.class, profileId);
-        return em.createQuery("select m from MedInfo m where m.profile = :profile and m.dosageTime.medPeriod = :period", MedInfo.class)
-                .setParameter("profile", profile)
-                .setParameter("period", period)
-                .getResultList();
-    }
-
     public void delete(MedInfo medInfo){
         em.remove(medInfo);
     }
 
     public List<MedInfo> findByDate(Profile profile, LocalDate date){
-        return em.createQuery("select m from MedInfo  m where m.profile = :profile and m.startDate = :date", MedInfo.class)
+        return em.createQuery("select m from MedInfo  m where m.profile = :profile and m.date = :date", MedInfo.class)
                 .setParameter("profile", profile)
                 .setParameter("date", date)
                 .getResultList();
     }
 
-    public List<MedInfo> findByDateAndPeriod(Profile profile, LocalDate date, int howLong){
+    public List<MedInfo> findByDateAndPeriod(Profile profile, LocalDate date, medPeriod period){
         return em.createQuery("select m from MedInfo m " +
                         "where m.profile = :profile " +
-                        "and m.startDate >= :startDate and m.startDate <= :endDate", MedInfo.class)
+                        "and m.date = :startDate " +
+                        "and m.dosageTime.medPeriod = :period", MedInfo.class)
                 .setParameter("profile", profile)
                 .setParameter("startDate", date)
-                .setParameter("endDate", date.plusDays(howLong - 1))
+                .setParameter("period", period)
                 .getResultList();
     }
 }

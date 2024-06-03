@@ -26,10 +26,8 @@ public class MedInfo {
     @JoinColumn(name = "profile_id")
     private Profile profile;
 
-    private int howLong;
-
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate startDate;
+    private LocalDate date;
 
     @Embedded
     private DosageTime dosageTime; // 복용법 아침 식전 30분
@@ -47,14 +45,13 @@ public class MedInfo {
     // 연관관계 메서드 //
 
     public static MedInfo createMedInfo(Pill pill, Profile profile,
-                   int howLong, LocalDate startDate,
+                   LocalDate startDate,
                    DosageTime dosageTime, LocalTime eatTime) {
         MedInfo medInfo = new MedInfo();
 
         medInfo.pill = pill;
         medInfo.profile = profile;
-        medInfo.howLong = howLong;
-        medInfo.startDate = startDate;
+        medInfo.date = startDate;
         medInfo.dosageTime = dosageTime;
         medInfo.eatTime = eatTime;
 
