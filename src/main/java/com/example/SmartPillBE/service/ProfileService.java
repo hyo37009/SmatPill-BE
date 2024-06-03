@@ -79,4 +79,8 @@ public class ProfileService {
         profileRepository.delete(profile);
         return true;
     }
+
+    public Profile getRepresentativeProfile(){
+        return profileRepository.findRepresentativeProfile();
+    }
 }

@@ -7,6 +7,7 @@ import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -40,5 +41,22 @@ public class MedInfoRepository {
 
     public void delete(MedInfo medInfo){
         em.remove(medInfo);
+    }
+
+    public List<MedInfo> findByDate(Profile profile, LocalDate date){
+        return em.createQuery("select m from MedInfo  m where m.profile = :profile and m.startDate = :date", MedInfo.class)
+                .setParameter("profile", profile)
+                .setParameter("date", date)
+                .getResultList();
+    }
+
+    public List<MedInfo> findByDateAndPeriod(Profile profile, LocalDate date, int howLong){
+        return em.createQuery("select m from MedInfo m " +
+                        "where m.profile = :profile " +
+                        "and m.startDate >= :startDate and m.startDate <= :endDate", MedInfo.class)
+                .setParameter("profile", profile)
+                .setParameter("startDate", date)
+                .setParameter("endDate", date.plusDays(howLong - 1))
+                .getResultList();
     }
 }

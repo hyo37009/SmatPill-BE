@@ -37,6 +37,11 @@ public class ProfileRepository {
                 .size();
     }
 
+    public Profile findRepresentativeProfile(){
+        return em.createQuery("select p from Profile p where p.isRepresentative = true ", Profile.class)
+                .getSingleResult();
+    }
+
     public boolean isEmpty(){
         return findAll().isEmpty();
     }
