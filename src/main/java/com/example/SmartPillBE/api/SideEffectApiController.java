@@ -23,8 +23,8 @@ public class SideEffectApiController {
         return sideEffectService.findByProfileId(profileId).stream()
                 .map(s -> new SideEffectDto(
                         s.getId(),
-                        s.getMemo(),
-                        s.getPill().getPillNumber()
+                        s.getPill().getPillNumber(),
+                        s.getMemo()
                 )).collect(Collectors.toList());
     }
 
