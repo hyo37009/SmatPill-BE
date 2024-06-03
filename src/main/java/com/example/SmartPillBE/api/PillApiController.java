@@ -2,10 +2,11 @@ package com.example.SmartPillBE.api;
 
 import com.example.SmartPillBE.domain.Pill;
 import com.example.SmartPillBE.service.PillService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.json.JSONObject;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,8 +16,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,15 +29,6 @@ public class PillApiController {
 
     private final PillService pillService;
 
-    @GetMapping("/api/pill/{pillNumber}")
-    public PillResponseForApp searchByNumber(@PathVariable("pillNumber") String pillNumber) throws Exception {
-        Pill pill = pillService.findByNumber(pillNumber);
-        if(pill == null){
-            return null;
-        }
-        return new PillResponseForApp(pill);
-    }
-
     @GetMapping("/api/pill/name/{pillName}")
     public List<PillResponseForApp> searchByName(@PathVariable("pillName") String pillName){
         List<Pill> pills = pillService.findByName(pillName);
@@ -44,9 +37,9 @@ public class PillApiController {
                 .collect(Collectors.toList());
     }
 
-    @PostMapping("/api/pill/")
+    @PostMapping("/api/pill")
     public List<Pill> searchByImage(@RequestPart(value = "image")MultipartFile image) throws IOException {
-        URL url = new URL("http://15.165.129.252:5000/api/ai/detection");
+        URL url = new URL("http://localhost:5000/api/ai/detection");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setUseCaches(false);
         con.setDoInput(true);
@@ -54,13 +47,8 @@ public class PillApiController {
         con.setRequestMethod("POST");
         con.setRequestProperty("Content-Type", "multipart/form-data; charset=utf-8");
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("image", image);
-
-        String body = jsonObject.toString();
-
         DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-        wr.write(body.getBytes("utf-8"));
+        wr.write(Base64.getEncoder().encodeToString(image.getBytes()).getBytes());
         wr.flush();
         wr.close();
 
@@ -73,6 +61,29 @@ public class PillApiController {
         br.close();
 
         String korResponse = uniToKor(response.toString());
+
+        JsonNode parent = new ObjectMapper().readTree(korResponse);
+        for (int i = 0; i < parent.size(); i++) {
+            JsonNode PillParent = parent.findParent(String.valueOf(i));
+            String pillColor = PillParent.findValuesAsText("pill_color").get(0);
+            String pillShape = PillParent.findValuesAsText("pill_shape").get(0);
+            String pillText = PillParent.findValuesAsText("pill_text").get(0);
+
+            List<Pill> byAll = pillService.findByAll(pillColor, pillShape, pillText);
+            if ((pillText == null || pillText.equals("null")) &&!byAll.isEmpty()) {
+                return byAll;
+            } else {
+                List<Pill> byColorAndShape = pillService.findByColorAndShape(pillColor, pillShape);
+                return byColorAndShape;
+            }
+        }
+        return new ArrayList<>();
+    }
+
+    private List<Pill> findByImage(String korResponse) throws JsonProcessingException {
+        System.out.println("korResponse = " + korResponse);
+
+
 
         return null;
     }

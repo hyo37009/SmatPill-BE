@@ -25,6 +25,15 @@ public class PillService {
         return pill;
     }
 
+    public List<Pill> findByColorAndShape(String color, String shape){
+        return pillRepository.findByColorAndShape(color, shape);
+    }
+
+    public List<Pill> findByAll(String color, String shape, String print){
+        return pillRepository.findByAll(color, shape, print);
+    }
+
+
     public List<Pill> findByShape(String shape){
         return pillRepository.findByShape(shape);
     }

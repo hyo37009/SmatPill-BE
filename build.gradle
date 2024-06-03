@@ -36,7 +36,7 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.jsoup/jsoup
 	implementation group: 'org.jsoup', name: 'jsoup', version: '1.14.3'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-
+	implementation 'com.fasterxml.jackson.core:jackson-core:2.16.1'
 }
 
 tasks.named('test') {

@@ -53,4 +53,22 @@ public class PillRepository {
                 .getResultList();
     }
 
+    public List<Pill> findByColorAndShape(String color, String shape){
+        return em.createQuery("select p from Pill p where (p.colorBack = :color or p.colorFront = :color)" +
+                "and (p.shape = :shape)", Pill.class)
+                .setParameter("color", color)
+                .setParameter("shape", shape)
+                .getResultList();
+    }
+
+    public List<Pill> findByAll(String color, String shape, String print){
+        return em.createQuery("select p from Pill p where (p.colorBack = :color or p.colorFront = :color)" +
+                        "and (p.shape = :shape) " +
+                        "and (p.printFront = :print or p.printBack = :print)", Pill.class)
+                .setParameter("color", color)
+                .setParameter("shape", shape)
+                .setParameter("print", print)
+                .getResultList();
+    }
+
 }
