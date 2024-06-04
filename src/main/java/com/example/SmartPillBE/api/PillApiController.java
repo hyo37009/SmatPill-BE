@@ -29,6 +29,15 @@ public class PillApiController {
 
     private final PillService pillService;
 
+    @GetMapping("/api/pill/{pillNumber}")
+    public PillResponseForApp searchByNumber(@PathVariable("pillNumber") String pillNumber) throws Exception {
+        Pill pill = pillService.findByNumber(pillNumber);
+        if(pill == null){
+            return null;
+        }
+        return new PillResponseForApp(pill);
+    }
+
     @GetMapping("/api/pill/name/{pillName}")
     public List<PillResponseForApp> searchByName(@PathVariable("pillName") String pillName){
         List<Pill> pills = pillService.findByName(pillName);
