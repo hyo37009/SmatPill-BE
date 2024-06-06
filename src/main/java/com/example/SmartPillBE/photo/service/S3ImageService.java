@@ -26,7 +26,7 @@ public class S3ImageService {
      * 3. profile에 저장
      */
     public Long savePrescription(ImageDto imageDto) throws Exception {
-        S3Image newImage = new S3Image(imageDto.getProfile(), imageDto.getUrl());
+        S3Image newImage = new S3Image(imageDto.getProfile(), imageDto.getUrl(), "prescription");
         s3ImageRepository.save(newImage);
 
         return newImage.getId();
@@ -34,7 +34,7 @@ public class S3ImageService {
 
     public List<S3Image> getPrescriptions(int profileId) throws Exception {
         Profile profile = profileService.getProfile(profileId);
-        return s3ImageRepository.findByProfile(profile);
+        return s3ImageRepository.findByProfileAndCategory(profile, "prescription");
     }
 //
 //    public void deletePrescription(int profileId, S3Image s3Image) throws Exception {
@@ -45,8 +45,8 @@ public class S3ImageService {
 //    }
 
     public Long setProfileImg(ImageDto imageDto) throws Exception {
-        S3Image s3Image = new S3Image(imageDto.getProfile(), imageDto.getUrl());
-        s3ImageRepository.save(s3Image);
+        S3Image s3Image = new S3Image(imageDto.getProfile(), imageDto.getUrl(), "profile");
+        s3ImageRepository.saveProfileImg(s3Image);
 
         Profile profile = profileService.getProfile(imageDto.getProfile().getId());
         profile.setProfileImg(s3Image);
@@ -57,6 +57,11 @@ public class S3ImageService {
     public void deleteProfileImg(int profileId) throws Exception {
         Profile profile = profileService.getProfile(profileId);
         profile.deleteProfileImg();
+    }
+
+    public void deletePrescription(int profileId, Long imgid) throws Exception {
+        S3Image s3Image = s3ImageRepository.findById(imgid).get();
+        s3ImageRepository.delete(s3Image);
     }
 
 
