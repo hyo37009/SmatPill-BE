@@ -33,7 +33,7 @@ public class S3ImageRepository implements JpaRepository<S3Image, Long> {
 
     public void saveProfileImg(S3Image image){
         List<S3Image> images = em.createQuery("select s from S3Image s " +
-                        "where profile = :profile and s.category = :category", S3Image.class)
+                        "where s.profile = :profile and s.category = :category", S3Image.class)
                 .setParameter("profile", image.getProfile())
                 .setParameter("category", "profile")
                 .getResultList();

@@ -29,10 +29,10 @@ public class SideEffectApiController {
     }
 
     @GetMapping("/api/profiles/{id}/sideEffects/{pillNumber}")
-    public GeneralResponse getMemo(@PathVariable("id") int profileId, @PathVariable("pillNumber") String pillNumber, @RequestBody String memo) throws Exception {
+    public SideEffectDto getMemo(@PathVariable("id") int profileId, @PathVariable("pillNumber") String pillNumber) throws Exception {
         SideEffect sideEffect = sideEffectService.findByProfileIdAndPillNumber(profileId, pillNumber);
-        sideEffectService.setMemo(sideEffect.getId(), memo);
-        return new GeneralResponse(sideEffect.getId().toString(), "정상적으로 설정되었습니다.");
+        return new SideEffectDto(sideEffect.getId(), sideEffect.getPill().getPillNumber(), sideEffect
+                .getMemo());
     }
 
     @Transactional

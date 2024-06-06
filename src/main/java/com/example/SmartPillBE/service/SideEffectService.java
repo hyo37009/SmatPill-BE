@@ -21,9 +21,14 @@ public class SideEffectService {
     public Long create(int profileId, String pillNumber, String memo) throws Exception {
         Profile profile = profileService.getProfile(profileId);
         Pill pill = pillService.findByNumber(pillNumber);
-        SideEffect sideEffect = SideEffect.createSideEffect(profile, pill, memo);
-        sideEffectRepository.save(sideEffect);
-        return sideEffect.getId();
+
+        SideEffect sideEffect = sideEffectRepository.findByProfileAndPill(profile, pill);
+        if (sideEffect != null){
+            sideEffectRepository.delete(sideEffect);
+        }
+        SideEffect newSideEffect = SideEffect.createSideEffect(profile, pill, memo);
+        sideEffectRepository.save(newSideEffect);
+        return newSideEffect.getId();
     }
     public SideEffect findOne(Long id) throws Exception {
         SideEffect sideEffect = sideEffectRepository.findOne(id);
