@@ -19,10 +19,10 @@ public class ProfileService {
     ProfileRepository profileRepository;
 
     @Transactional
-    public int newProfile(String name, String birth, float height, float weight, String sex, String nickname){
+    public int newProfile(String name, String birth, float height, float weight, String sex, String nickname) {
         System.out.println("birth = " + birth);
         LocalDate birthDate = LocalDate.parse(birth, DateTimeFormatter.ISO_LOCAL_DATE);
-        Gender gender = (sex.equals("여"))?Gender.FEMALE:Gender.MALE;
+        Gender gender = (sex.equals("여")) ? Gender.FEMALE : Gender.MALE;
 
         Profile profile = Profile.createProfile(name, birthDate, height, weight, gender, nickname);
         if (profileRepository.isEmpty()) {
@@ -33,22 +33,22 @@ public class ProfileService {
     }
 
     @Transactional
-    public int updateProfile(Integer id, String name, Float height, Float weight, String nickname){
+    public int updateProfile(Integer id, String name, Float height, Float weight, String nickname) {
 
         Profile profile = profileRepository.findOne(id);
-        if(height != null){
+        if (height != null) {
             profile.setHeight(height);
         }
 
-        if(weight != null){
+        if (weight != null) {
             profile.setWeight(weight);
         }
 
-        if(name != null){
+        if (name != null) {
             profile.setName(name);
         }
 
-        if(nickname != null){
+        if (nickname != null) {
             profile.setName(nickname);
         }
 
@@ -60,27 +60,27 @@ public class ProfileService {
      */
     public Profile getProfile(int profileId) throws Exception {
         Profile profile = profileRepository.findOne(profileId);
-        if(profile == null){
+        if (profile == null) {
             throw new Exception("프로필 아이디가 올바르지 않습니다.");
         }
         return profile;
     }
 
-    public List<Profile> findAll(){
+    public List<Profile> findAll() {
         return profileRepository.findAll();
     }
 
     @Transactional
     public boolean deleteProfile(int id) throws Exception {
         Profile profile = profileRepository.findOne(id);
-        if(profile == null){
+        if (profile == null) {
             throw new Exception("프로필 아이디가 올바르지 않습니다.");
         }
         profileRepository.delete(profile);
         return true;
     }
 
-    public Profile getRepresentativeProfile(){
+    public Profile getRepresentativeProfile() {
         return profileRepository.findRepresentativeProfile();
     }
 }

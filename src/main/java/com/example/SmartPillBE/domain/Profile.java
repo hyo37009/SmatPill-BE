@@ -1,5 +1,6 @@
 package com.example.SmartPillBE.domain;
 
+import com.example.SmartPillBE.photo.domain.S3Image;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,6 +43,9 @@ public class Profile {
 
     private int age;
 
+    @OneToOne
+    private S3Image profileImg;
+
     @Override
     public String toString() {
         return "Profile{" +
@@ -74,6 +78,14 @@ public class Profile {
 
     public void setRepresentative(){
         isRepresentative = true;
+    }
+
+    public void setProfileImg(S3Image img){
+        this.profileImg = img;
+    }
+
+    public void deleteProfileImg() {
+        this.profileImg = null;
     }
 
 }

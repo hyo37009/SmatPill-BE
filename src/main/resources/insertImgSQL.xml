@@ -1,0 +1,7 @@
+<insert id="save" parameterType="java.util.Map">
+    INSERT INTO IMG (
+    IMG
+    ) VALUES (
+    #{bytes, jdbcType=BLOB, javaType=[B}
+    )
+</insert>
