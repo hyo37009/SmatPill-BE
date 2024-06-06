@@ -2,15 +2,17 @@ package com.example.SmartPillBE.photo.service;
 
 import com.example.SmartPillBE.domain.Profile;
 import com.example.SmartPillBE.photo.domain.S3Image;
-import com.example.SmartPillBE.photo.dto.PrescriptionImageDto;
 import com.example.SmartPillBE.photo.dto.ImageDto;
+import com.example.SmartPillBE.photo.repository.S3ImageRepository;
 import com.example.SmartPillBE.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class S3ImageService {
     private final S3ImageRepository s3ImageRepository;
