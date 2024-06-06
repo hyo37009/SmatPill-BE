@@ -42,12 +42,13 @@ public class S3ImageService {
 //
 //    }
 
-    public Long setProfileImg(ImageDto imageDto){
+    public Long setProfileImg(ImageDto imageDto) throws Exception {
         S3Image s3Image = new S3Image(imageDto.getProfile(), imageDto.getUrl());
         s3ImageRepository.save(s3Image);
 
-        Profile profile = imageDto.getProfile();
+        Profile profile = profileService.getProfile(imageDto.getProfile().getId());
         profile.setProfileImg(s3Image);
+
         return s3Image.getId();
     }
 
