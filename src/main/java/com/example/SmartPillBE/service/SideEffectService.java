@@ -22,9 +22,9 @@ public class SideEffectService {
         Profile profile = profileService.getProfile(profileId);
         Pill pill = pillService.findByNumber(pillNumber);
 
-        SideEffect sideEffect = sideEffectRepository.findByProfileAndPill(profile, pill);
-        if (sideEffect != null){
-            sideEffectRepository.delete(sideEffect);
+        List<SideEffect> sideEffect = sideEffectRepository.findByProfileAndPill(profile, pill);
+        if (!sideEffect.isEmpty()){
+            sideEffectRepository.delete(sideEffect.get(0));
         }
         SideEffect newSideEffect = SideEffect.createSideEffect(profile, pill, memo);
         sideEffectRepository.save(newSideEffect);
@@ -45,7 +45,11 @@ public class SideEffectService {
     public SideEffect findByProfileIdAndPillNumber(int profileId, String pillNumber) throws Exception {
         Profile profile = profileService.getProfile(profileId);
         Pill pill = pillService.findByNumber(pillNumber);
-        return sideEffectRepository.findByProfileAndPill(profile, pill);
+        List<SideEffect> sideEffects = sideEffectRepository.findByProfileAndPill(profile, pill);
+        if (sideEffects.isEmpty()){
+            return null;
+        }
+        return sideEffects.get(0);
     }
 
     public Long setMemo(Long id, String memo){

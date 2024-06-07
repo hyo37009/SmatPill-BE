@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -39,11 +40,11 @@ public class SideEffectRepository {
     }
 
 
-    public SideEffect findByProfileAndPill(Profile profile, Pill pill) {
+    public List<SideEffect> findByProfileAndPill(Profile profile, Pill pill) {
         return em.createQuery("select s from SideEffect s " +
                         "where s.profile = :profile and s.pill = :pill", SideEffect.class)
                 .setParameter("profile", profile)
                 .setParameter("pill", pill)
-                .getSingleResult();
+                .getResultList();
     }
 }
