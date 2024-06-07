@@ -54,7 +54,7 @@ public class PillRepository {
     }
 
     public List<Pill> findByColorAndShape(String color, String shape){
-        return em.createQuery("select p from Pill p where (p.colorBack = :color or p.colorFront = :color)" +
+        return em.createQuery("select p from Pill p where (p.colorBack = :color or p.colorFront = :color) " +
                 "and (p.shape = :shape)", Pill.class)
                 .setParameter("color", color)
                 .setParameter("shape", shape)

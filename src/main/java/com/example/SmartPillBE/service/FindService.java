@@ -5,8 +5,6 @@ import com.example.SmartPillBE.ocr.InferTextExtractor;
 import com.example.SmartPillBE.ocr.OCRGeneralAPI;
 import com.example.SmartPillBE.repository.PillRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,16 +19,16 @@ public class FindService {
     private List<String> keys = Arrays.asList("당의정","필름코팅정","정제","나정","스팬슐","연질캡슐제","추어블정","저작정","경질캡슐제","연질캡슐제","정제","캡슐","서방성캡슐제","펠렛","경질캡슐제","과립제","다층정","구강붕해정","장용성필름코팅정","서방성필름코팅정","장용정","트로키제","서방성장용필름코팅정","서방정","경질캡슐제","장용성과립제","장용성캡슐제","정제","흡입제","미분류","젤라틴코팅성경질캡슐제","장용성캡슐제","펠렛","분산정","현탁정","설하정","경질캡슐제","과립제정제","경질캡슐제","서방성장용성펠렛","구강붕해필름","캡슐","장용성당의정","질정","질연질캡슐제","장용성필름코팅당의정","경질캡슐제","정제","장용성필름코팅캡슐제","질좌제","껌제","서방성다층정","발포정","산제","지지체가있는첩부제","정량흡입제","분말제","박칼정","정량분말분무제","부착정","유핵정","경질캡슐제","공캡슐","현탁상");
 
 
-    public void searchPill(){
-        String imagePath = "C:\\CapstoneProject\\SmatPill-BE\\src\\main\\java\\com\\example\\SmartPillBE\\ocr\\홍길동.jpg";
+    public List<Pill> searchPill(String imageUrl){
+//        String imagePath = "C:\\CapstoneProject\\SmatPill-BE\\src\\main\\java\\com\\example\\SmartPillBE\\ocr\\홍길동.jpg";
 
         InferTextExtractor inferTextExtractor = new InferTextExtractor();
-        List<String> inferTexts = inferTextExtractor.extractInferText(imagePath);
+        List<String> inferTexts = inferTextExtractor.extractInferText(imageUrl);
 
         System.out.println("inferTexts = " + inferTexts);
 
         OCRGeneralAPI ocrGeneralAPI = new OCRGeneralAPI();
-        List<String> ocrResult = ocrGeneralAPI.getOCRResult(imagePath);
+        List<String> ocrResult = ocrGeneralAPI.getOCRResult(imageUrl);
         System.out.println("ocrResult = " + ocrResult);
 
 
@@ -78,39 +76,26 @@ public class FindService {
             }
         }
 
-        for (Pill pill : newResult) {
-            System.out.println("pill = " + pill);
-        }
+//        for (Pill pill : newResult) {
+//            System.out.println("pill = " + pill);
+//        }
 //        System.out.println("검색된 약:" + result);
 
 
 //        List<Pill> pills = pillRepository.findByName("페니라민정");
 //        System.out.println(pills);
 
-        List<Pill> check1 = pillRepository.findByName("올메텍플러스정");
-        List<Pill> check2 = pillRepository.findByName("올메텍플러스정20/");
-        List<Pill> check3 = pillRepository.findByName("올메텍플러스정20/12.5mg");
-        System.out.println(check1);
-        System.out.println(check2);
-        System.out.println(check3);
+//        List<Pill> check1 = pillRepository.findByName("올메텍플러스정");
+//        List<Pill> check2 = pillRepository.findByName("올메텍플러스정20/");
+//        List<Pill> check3 = pillRepository.findByName("올메텍플러스정20/12.5mg");
+//        System.out.println(check1);
+//        System.out.println(check2);
+//        System.out.println(check3);
 
-        for (String inferText : inferTexts) {
-            System.out.println("inferText = " + inferText);
-        }
-
-
-//        List<Pill> result = new ArrayList<>();
-
-//        for(String inferText : inferTexts){
-
-//            List<Pill> pills = pillRepository.findByName(inferText);
-
-//            if(pills.isEmpty()){
-//                result.addAll(pills);
-//            }
-
+//        for (String inferText : inferTexts) {
+//            System.out.println("inferText = " + inferText);
 //        }
-//        System.out.println("검색된 약:" + result);
 
+        return newResult;
     }
 }

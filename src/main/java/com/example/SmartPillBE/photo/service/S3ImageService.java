@@ -64,6 +64,20 @@ public class S3ImageService {
         s3ImageRepository.delete(s3Image);
     }
 
+    public Long saveDetectionImg(ImageDto imageDto) throws Exception {
+        S3Image newImage = new S3Image(null, imageDto.getUrl(), "detection");
+        List<S3Image> detection = s3ImageRepository.findByCategory("detection");
+        if(!detection.isEmpty()) {
+            for (S3Image s3Image : detection) {
+                s3ImageRepository.delete(s3Image);
+            }
+        }
+
+        s3ImageRepository.save(newImage);
+
+        return newImage.getId();
+    }
+
 
 //    public FileEntity getFile(int profileId){
 //        return profilePhotoRepository.getReferenceById(id);
